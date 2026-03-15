@@ -1,0 +1,109 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 224 71% 4%;
+    --foreground: 210 40% 92%;
+
+    --card: 222 47% 7%;
+    --card-foreground: 210 40% 92%;
+
+    --popover: 222 47% 7%;
+    --popover-foreground: 210 40% 92%;
+
+    --primary: 263 91% 71%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 222 47% 14%;
+    --secondary-foreground: 210 40% 92%;
+
+    --muted: 222 30% 12%;
+    --muted-foreground: 215 20% 55%;
+
+    --accent: 190 95% 39%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 100% / 0.08;
+    --input: 0 0% 100% / 0.08;
+    --ring: 263 91% 71%;
+
+    --radius: 0.75rem;
+
+    --emerald: 160 84% 39%;
+    --rose: 347 77% 50%;
+    --amber: 38 92% 50%;
+    --cyan: 190 95% 39%;
+    --violet: 263 91% 71%;
+
+    --sidebar-background: 222 47% 5%;
+    --sidebar-foreground: 210 40% 92%;
+    --sidebar-primary: 263 91% 71%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 222 47% 14%;
+    --sidebar-accent-foreground: 210 40% 92%;
+    --sidebar-border: 0 0% 100% / 0.08;
+    --sidebar-ring: 263 91% 71%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter Tight', system-ui, sans-serif;
+    letter-spacing: -0.03em;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-card border border-border rounded-2xl relative overflow-hidden;
+  }
+  .glass-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 0.5px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  }
+  .gradient-text {
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent;
+  }
+  .glow-border {
+    @apply relative;
+  }
+  .glow-border::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+    z-index: -1;
+    opacity: 0.2;
+    filter: blur(8px);
+    transition: opacity 0.3s;
+  }
+  .glow-border:hover::after {
+    opacity: 0.4;
+  }
+  .font-mono-data {
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .section-label {
+    @apply text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground ml-1;
+  }
+}
