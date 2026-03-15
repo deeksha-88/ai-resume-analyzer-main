@@ -46,7 +46,7 @@ const ResumeUpload: React.FC<ResumeUploadProps> = ({ resumeText, onResumeTextCha
       alert("This PDF may not contain readable text. Try a DOCX resume.");
       return;
     }
-
+    console.log(text);
     onResumeTextChange(text);
     setFileName(file.name);
     onFileNameChange(file.name);
