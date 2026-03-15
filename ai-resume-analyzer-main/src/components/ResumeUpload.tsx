@@ -1,7 +1,9 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { Upload, FileText, X } from 'lucide-react';
 import mammoth from 'mammoth';
-import * as pdfjsLib from 'pdfjs-dist';
+import * as pdfjsLib from "pdfjs-dist";
+import pdfWorker from "pdfjs-dist/build/pdf.worker?url"
+pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
 
 interface ResumeUploadProps {
   resumeText: string;
@@ -34,7 +36,7 @@ const ResumeUpload: React.FC<ResumeUploadProps> = ({ resumeText, onResumeTextCha
       return;
     }
 
-    if (file.type === "application/pdf") {
+    if (name.endsWith('.pdf')) {
       pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
       const arrayBuffer = await file.arrayBuffer();
       const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
