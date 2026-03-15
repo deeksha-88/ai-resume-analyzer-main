@@ -37,21 +37,24 @@ const ResumeUpload: React.FC<ResumeUploadProps> = ({ resumeText, onResumeTextCha
     }
 
     if (name.endsWith('.pdf')) {
-      pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
-      const arrayBuffer = await file.arrayBuffer();
-      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-      let fullText = '';
-      for (let i = 1; i <= pdf.numPages; i++) {
-        const page = await pdf.getPage(i);
-        const content = await page.getTextContent();
-        const strings = content.items.map((item: any) => item.str);
-        fullText += strings.join(' ') + '\n';
-      }
-      onResumeTextChange(fullText);
-      setFileName(file.name);
-      onFileNameChange(file.name);
+  const reader = new FileReader();
+
+  reader.onload = function () {
+    const text = reader.result as string;
+
+    if (!text || text.trim().length === 0) {
+      alert("This PDF may not contain readable text. Try a DOCX resume.");
       return;
     }
+
+    onResumeTextChange(text);
+    setFileName(file.name);
+    onFileNameChange(file.name);
+  };
+
+  reader.readAsText(file);
+  return;
+}
   }, [onResumeTextChange, onFileNameChange]);
 
   const handleDrop = useCallback((e: React.DragEvent) => {
