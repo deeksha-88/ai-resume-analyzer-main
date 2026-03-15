@@ -1,9 +1,9 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { Upload, FileText, X } from 'lucide-react';
 import mammoth from 'mammoth';
-import * as pdfjsLib from "pdfjs-dist";
-import pdfWorker from "pdfjs-dist/build/pdf.worker?url"
-pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
+import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf";
+import pdfWorker from "pdfjs-dist/legacy/build/pdf.worker.entry"
+pdfjsLib.GlobalWorkerOptions.workerPort=new pdfWorker();
 
 interface ResumeUploadProps {
   resumeText: string;
@@ -36,23 +36,22 @@ const ResumeUpload: React.FC<ResumeUploadProps> = ({ resumeText, onResumeTextCha
       return;
     }
 
-    if (name.endsWith('.pdf')) {
-  const reader = new FileReader();
 
-  reader.onload = function () {
-    const text = reader.result as string;
+if (name.endsWith('.pdf')) {
+  const arrayBuffer = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
 
-    if (!text || text.trim().length === 0) {
-      alert("This PDF may not contain readable text. Try a DOCX resume.");
-      return;
-    }
-    console.log(text);
-    onResumeTextChange(text);
-    setFileName(file.name);
-    onFileNameChange(file.name);
-  };
+  let fullText = '';
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const content = await page.getTextContent();
+    const strings = content.items.map((item: any) => item.str);
+    fullText += strings.join(' ') + '\n';
+  }
 
-  reader.readAsText(file);
+  onResumeTextChange(fullText);
+  setFileName(file.name);
+  onFileNameChange(file.name);
   return;
 }
   }, [onResumeTextChange, onFileNameChange]);
