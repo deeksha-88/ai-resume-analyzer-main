@@ -34,7 +34,7 @@ const ResumeUpload: React.FC<ResumeUploadProps> = ({ resumeText, onResumeTextCha
       return;
     }
 
-    if (name.endsWith('.pdf')) {
+    if (file.type === "application/pdf") {
       pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
       const arrayBuffer = await file.arrayBuffer();
       const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
